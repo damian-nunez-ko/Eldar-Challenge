@@ -1,4 +1,4 @@
-package eldar.creditcard;
+package eldar.creditcard.models;
 
 import java.util.Objects;
 

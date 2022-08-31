@@ -1,4 +1,4 @@
-package eldar.creditcard;
+package eldar.creditcard.models;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -9,16 +9,14 @@ public class CreditCard {
     private final Integer number;
     private final Person holder;
     private final LocalDate expireDate;
+    private final Integer totalSpent;
 
     public CreditCard(CardIssuer issuer, Integer number, Person holder, LocalDate expireDate) {
         this.issuer = issuer;
         this.number = number;
         this.holder = holder;
         this.expireDate = expireDate;
-    }
-
-    public boolean isValid() {
-        return expireDate.isAfter(LocalDate.now());
+        this.totalSpent = 0;
     }
 
     public CardIssuer getIssuer() {
@@ -35,6 +33,10 @@ public class CreditCard {
 
     public LocalDate getExpireDate() {
         return expireDate;
+    }
+
+    public Integer getTotalSpent() {
+        return totalSpent;
     }
 
     @Override
