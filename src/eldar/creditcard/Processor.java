@@ -33,7 +33,7 @@ public class Processor {
         return cards.get(id);
     }
 
-    public boolean isOperationValid(int amount) {
+    public boolean isOperationValid(double amount) {
         return amount <= MAX_OPERATION_AMOUNT;
     }
 
@@ -44,6 +44,10 @@ public class Processor {
 
     public boolean areCCEqual(int id1, int id2) {
         return cards.get(id1).equals(cards.get(id2));
+    }
+
+    public double getRateFromOperation(CardIssuer issuer, double amount) {
+        return amount * issuer.getRate();
     }
 
 }
