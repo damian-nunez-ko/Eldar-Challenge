@@ -38,4 +38,9 @@ public class Person {
         return Objects.hash(id);
     }
 
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
+    }
+
 }

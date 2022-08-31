@@ -52,4 +52,9 @@ public class CreditCard {
         return Objects.hash(number);
     }
 
+    @Override
+    public String toString() {
+        return "CC: " + number + "\nHolder: " + holder + "\nIssuer: " + issuer.toString() + "\nExpiration date: " + expireDate.toString();
+    }
+
 }
