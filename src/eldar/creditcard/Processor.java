@@ -1,8 +1,7 @@
 package eldar.creditcard;
 
-import eldar.creditcard.models.CardIssuer;
 import eldar.creditcard.models.CreditCard;
-
+import eldar.creditcard.models.Operation;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +32,8 @@ public class Processor {
         return cards.get(id);
     }
 
-    public boolean isOperationValid(double amount) {
-        return amount <= MAX_OPERATION_AMOUNT;
+    public boolean isOperationValid(Operation operation) {
+        return operation.getAmount() <= MAX_OPERATION_AMOUNT;
     }
 
     public boolean canCCOperate(int id) {
@@ -46,8 +45,8 @@ public class Processor {
         return cards.get(id1).equals(cards.get(id2));
     }
 
-    public double getRateFromOperation(CardIssuer issuer, double amount) {
-        return amount * issuer.getRate();
+    public double getCostAddedFromRate(Operation op) {
+        return op.getAmount() * op.getCard().getIssuer().getRate(op);
     }
 
 }
