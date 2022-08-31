@@ -32,8 +32,8 @@ public class Processor {
         return cards.get(id);
     }
 
-    public boolean isOperationValid(Operation operation) {
-        return operation.getAmount() <= MAX_OPERATION_AMOUNT;
+    public boolean isOperationValid(Operation op) {
+        return op.getAmount() * (1 + op.getCard().getIssuer().getRate(op)) <= MAX_OPERATION_AMOUNT;
     }
 
     public boolean canCCOperate(int id) {
