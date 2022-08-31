@@ -9,14 +9,12 @@ public class CreditCard {
     private final Integer number;
     private final Person holder;
     private final LocalDate expireDate;
-    private final Double totalSpent;
 
     public CreditCard(CardIssuer issuer, Integer number, Person holder, LocalDate expireDate) {
         this.issuer = issuer;
         this.number = number;
         this.holder = holder;
         this.expireDate = expireDate;
-        this.totalSpent = 0.0;
     }
 
     public CardIssuer getIssuer() {
@@ -33,10 +31,6 @@ public class CreditCard {
 
     public LocalDate getExpireDate() {
         return expireDate;
-    }
-
-    public Double getTotalSpent() {
-        return totalSpent;
     }
 
     @Override
