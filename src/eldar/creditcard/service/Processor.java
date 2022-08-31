@@ -1,4 +1,4 @@
-package eldar.creditcard;
+package eldar.creditcard.service;
 
 import eldar.creditcard.models.CreditCard;
 import eldar.creditcard.models.Operation;
