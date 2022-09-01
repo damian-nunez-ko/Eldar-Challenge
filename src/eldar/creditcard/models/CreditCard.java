@@ -6,13 +6,13 @@ import java.util.Objects;
 public class CreditCard {
 
     private final CardIssuer issuer;
-    private final Integer number;
+    private final Integer id;
     private final Person holder;
     private final LocalDate expireDate;
 
-    public CreditCard(CardIssuer issuer, Integer number, Person holder, LocalDate expireDate) {
+    public CreditCard(CardIssuer issuer, Integer id, Person holder, LocalDate expireDate) {
         this.issuer = issuer;
-        this.number = number;
+        this.id = id;
         this.holder = holder;
         this.expireDate = expireDate;
     }
@@ -21,8 +21,8 @@ public class CreditCard {
         return issuer;
     }
 
-    public Integer getNumber() {
-        return number;
+    public Integer getId() {
+        return id;
     }
 
     public Person getHolder() {
@@ -38,17 +38,17 @@ public class CreditCard {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CreditCard that = (CreditCard) o;
-        return number.equals(that.number);
+        return id.equals(that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(number);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
-        return "CC: " + number + "\nHolder: " + holder + "\nIssuer: " + issuer.toString() + "\nExpiration date: " + expireDate.toString();
+        return "CC: " + id + "\nHolder: " + holder + "\nIssuer: " + issuer.toString() + "\nExpiration date: " + expireDate.toString();
     }
 
 }
