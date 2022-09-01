@@ -6,11 +6,11 @@ import java.util.Objects;
 public class CreditCard {
 
     private final CardIssuer issuer;
-    private final int id;
+    private final long id;
     private final Person holder;
     private final LocalDate expireDate;
 
-    public CreditCard(CardIssuer issuer, int id, Person holder, LocalDate expireDate) {
+    public CreditCard(CardIssuer issuer, long id, Person holder, LocalDate expireDate) {
         this.issuer = issuer;
         this.id = id;
         this.holder = holder;
@@ -21,7 +21,7 @@ public class CreditCard {
         return issuer;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

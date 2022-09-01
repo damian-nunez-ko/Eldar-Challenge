@@ -14,11 +14,13 @@ import java.util.Map;
 public class Processor {
 
     private static Processor processor = null;
-    private final Map<Integer, CreditCard> cards;
+
+    // Credit Cards and Operations would be persisted to a db
+    private final Map<Long, CreditCard> cards;
     private final Map<Integer, Operation> operations;
     private Integer currentOpId;
 
-    private static final int MAX_OPERATION_AMOUNT = 1000;
+    private static final double MAX_OPERATION_AMOUNT = 1000.0;
 
     private Processor() {
         cards = new HashMap<>();
@@ -42,7 +44,7 @@ public class Processor {
         cards.put(card.getId(), card);
     }
 
-    public CreditCard getCard(int id) {
+    public CreditCard getCard(long id) {
         return cards.get(id);
     }
 
@@ -54,7 +56,7 @@ public class Processor {
         if(!isOperationValid(op)) {
             throw new OperationMaxAmountReachedException("Operation cost is higher than allowed");
         }
-        // TODO: perfom operation
+        // TODO: perform operation
         operations.put(currentOpId, op);
         currentOpId++;
     }
@@ -70,10 +72,10 @@ public class Processor {
 
     public boolean isOperationValid(Operation op) throws BadArgumentsException {
         checkOperationArguments(op);
-        return op.getAmount() * (1 + getCostAddedFromRate(op)) <= MAX_OPERATION_AMOUNT;
+        return op.getAmount() + getCostAddedFromRate(op) <= MAX_OPERATION_AMOUNT;
     }
 
-    public boolean canCCOperate(int id) throws BadArgumentsException {
+    public boolean canCCOperate(long id) throws BadArgumentsException {
         CreditCard cc = cards.get(id);
         if(cc == null || cc.getExpireDate() == null) {
             throw new BadArgumentsException("Invalid Argument");
@@ -81,7 +83,7 @@ public class Processor {
         return cc.getExpireDate().isAfter(LocalDate.now());
     }
 
-    public boolean areCCEqual(int id1, int id2) throws BadArgumentsException {
+    public boolean areCCEqual(long id1, long id2) throws BadArgumentsException {
         CreditCard cc1 = cards.get(id1);
         CreditCard cc2 = cards.get(id2);
         if(cc1 == null || cc2 == null) {

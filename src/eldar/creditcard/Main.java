@@ -1,6 +1,5 @@
 package eldar.creditcard;
 
-import eldar.creditcard.exceptions.BadArgumentsException;
 import eldar.creditcard.models.CardIssuer;
 import eldar.creditcard.models.CreditCard;
 import eldar.creditcard.models.Operation;
@@ -18,24 +17,29 @@ import java.time.LocalDate;
 public class Main {
 
     final static String API_URL = "https://gixjlcaka3.execute-api.us-east-1.amazonaws.com/dev/rate";
+    final static String jsonInputString = "{\"amount\": \"500.0\"," +
+                                          " \"brand\": \"VISA\"," +
+                                          " \"year\": \"2025\"," +
+                                          " \"month\": \"6\"," +
+                                          " \"day\": \"15\"}";
 
-    final static int ccNumber1 = 123456789;
-    final static int ccNumber2 = 12345678;
+    final static long ccNumber1 = 5469875213659875L;
+    final static long ccNumber2 = 154896547236587L;
 
     final static double opAmount = 500.0;
-    final static LocalDate opDate = LocalDate.of(2022, 10, 8);
+    final static LocalDate opDate = LocalDate.of(2022, 10, 15);
 
     final static CreditCard cc1 = new CreditCard(CardIssuer.VISA, ccNumber1,
             new Person("Ignacio", "Flores", 1),
             LocalDate.of(2025, 6, 15));
 
-    final static CreditCard cc2 = new CreditCard(CardIssuer.NARA, ccNumber2,
+    final static CreditCard cc2 = new CreditCard(CardIssuer.AMEX, ccNumber2,
             new Person("Javier", "Gramajo", 2),
             LocalDate.of(2024, 8, 23));
 
     final static Operation op = new Operation(cc1, opAmount, opDate);
 
-    public static void main(String[] args) throws BadArgumentsException {
+    public static void main(String[] args) {
 
         Processor processor = Processor.getInstance();
 
@@ -88,11 +92,6 @@ public class Main {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
             connection.setDoOutput(true);
-            String jsonInputString = "{\"amount\": \"1000\"," +
-                    " \"brand\": \"VISA\"," +
-                    " \"year\": \"2025\"," +
-                    " \"month\": \"6\"," +
-                    " \"day\": \"15\"}";
 
             try(OutputStream output = connection.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
@@ -101,11 +100,11 @@ public class Main {
 
             try(BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
-                String responseLine = null;
+                String responseLine;
                 while((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                System.out.println("Response from server: \n" + response.toString());
+                System.out.println("Response from server: \n" + response);
             }
 
         } catch(Exception e) {
