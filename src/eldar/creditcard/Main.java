@@ -1,5 +1,8 @@
 package eldar.creditcard;
 
+import eldar.creditcard.exceptions.CreditCardAlreadyExistsException;
+import eldar.creditcard.exceptions.CreditCardCantOperateException;
+import eldar.creditcard.exceptions.OperationMaxAmountReachedException;
 import eldar.creditcard.models.CardIssuer;
 import eldar.creditcard.models.CreditCard;
 import eldar.creditcard.models.Operation;
@@ -38,11 +41,21 @@ public class Main {
 
         Processor processor = Processor.getInstance();
 
-        processor.addCard(cc1);
-        processor.addCard(cc2);
+        try {
+            processor.addCard(cc1);
+            processor.addCard(cc2);
+        } catch(CreditCardAlreadyExistsException e) {
+            System.out.println("Exception thrown while adding card: " + e.getMessage());
+        }
+
+        try {
+            processor.doOperation(op);
+        } catch (OperationMaxAmountReachedException | CreditCardCantOperateException e) {
+            System.out.println("Exception thrown while performing an operation: " + e.getMessage());
+        }
 
         // Invocar un metodo que devuelva toda la informacion de la tarjeta
-        System.out.println(processor.getCard(ccNumber1));
+        System.out.println("\n" + processor.getCard(ccNumber1));
 
         // Informar si una operacion es valida
         if(processor.isOperationValid(op)) {
@@ -81,7 +94,7 @@ public class Main {
             connection.setRequestProperty("Accept", "application/json");
             connection.setDoOutput(true);
             String jsonInputString = "{\"amount\": \"1000\"," +
-                    " \"brand\": \"Programmer\"," +
+                    " \"brand\": \"VISA\"," +
                     " \"year\": \"2025\"," +
                     " \"month\": \"6\"," +
                     " \"day\": \"15\"}";
