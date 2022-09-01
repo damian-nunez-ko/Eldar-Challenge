@@ -70,7 +70,7 @@ public class Main {
             if(processor.areCCEqual(ccNumber1, ccNumber2)) {
                 System.out.println("\nCredit cards are the same");
             } else {
-                System.out.println("\nCredit card are not the same");
+                System.out.println("\nCredit cards are not the same");
             }
 
             // Obtener por medio de un metodo la tasa de una operacion informando marca e importe"
