@@ -5,9 +5,9 @@ import java.util.Objects;
 public class Person {
     private final String firstName;
     private final String lastName;
-    private final Integer id;
+    private final int id;
 
-    public Person(String firstName, String lastName, Integer id) {
+    public Person(String firstName, String lastName, int id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.id = id;
@@ -21,7 +21,7 @@ public class Person {
         return lastName;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -30,7 +30,7 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return id.equals(person.id);
+        return id == person.id;
     }
 
     @Override

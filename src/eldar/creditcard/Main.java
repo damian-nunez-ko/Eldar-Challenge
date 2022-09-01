@@ -1,8 +1,6 @@
 package eldar.creditcard;
 
-import eldar.creditcard.exceptions.CreditCardAlreadyExistsException;
-import eldar.creditcard.exceptions.CreditCardCantOperateException;
-import eldar.creditcard.exceptions.OperationMaxAmountReachedException;
+import eldar.creditcard.exceptions.BadArgumentsException;
 import eldar.creditcard.models.CardIssuer;
 import eldar.creditcard.models.CreditCard;
 import eldar.creditcard.models.Operation;
@@ -24,8 +22,8 @@ public class Main {
     final static int ccNumber1 = 123456789;
     final static int ccNumber2 = 12345678;
 
-    final static double opAmount = 1000.0;
-    final static LocalDate opDate = LocalDate.of(2020, 6, 15);
+    final static double opAmount = 500.0;
+    final static LocalDate opDate = LocalDate.of(2022, 10, 8);
 
     final static CreditCard cc1 = new CreditCard(CardIssuer.VISA, ccNumber1,
             new Person("Ignacio", "Flores", 1),
@@ -33,53 +31,50 @@ public class Main {
 
     final static CreditCard cc2 = new CreditCard(CardIssuer.NARA, ccNumber2,
             new Person("Javier", "Gramajo", 2),
-            LocalDate.of(2025, 6, 15));
+            LocalDate.of(2024, 8, 23));
 
     final static Operation op = new Operation(cc1, opAmount, opDate);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BadArgumentsException {
 
         Processor processor = Processor.getInstance();
 
         try {
             processor.addCard(cc1);
             processor.addCard(cc2);
-        } catch(CreditCardAlreadyExistsException e) {
-            System.out.println("Exception thrown while adding card: " + e.getMessage());
-        }
 
-        try {
             processor.doOperation(op);
-        } catch (OperationMaxAmountReachedException | CreditCardCantOperateException e) {
-            System.out.println("Exception thrown while performing an operation: " + e.getMessage());
+
+            // Invocar un metodo que devuelva toda la informacion de la tarjeta
+            System.out.println("\n" + processor.getCard(ccNumber1));
+
+            // Informar si una operacion es valida
+            if(processor.isOperationValid(op)) {
+                System.out.println("\nValid operation");
+            } else {
+                System.out.println("\nInvalid operation");
+            }
+
+            // Informar si una tarjeta es valida para operar
+            if(processor.canCCOperate(ccNumber1)) {
+                System.out.println("\nCredit card can operate");
+            } else {
+                System.out.println("\nCredit card can't operate");
+            }
+
+            // Identificar si una tarjeta es distinta a otra
+            if(processor.areCCEqual(ccNumber1, ccNumber2)) {
+                System.out.println("\nCredit cards are the same");
+            } else {
+                System.out.println("\nCredit card are not the same");
+            }
+
+            // Obtener por medio de un metodo la tasa de una operacion informando marca e importe"
+            System.out.println("\nCost added from rate: " + processor.getCostAddedFromRate(op));
+
+        } catch(Exception e) {
+            System.out.println("Exception thrown: " + e.getMessage());
         }
-
-        // Invocar un metodo que devuelva toda la informacion de la tarjeta
-        System.out.println("\n" + processor.getCard(ccNumber1));
-
-        // Informar si una operacion es valida
-        if(processor.isOperationValid(op)) {
-            System.out.println("\nValid operation");
-        } else {
-            System.out.println("\nInvalid operation");
-        }
-
-        // Informar si una tarjeta es valida para operar
-        if(processor.canCCOperate(ccNumber1)) {
-            System.out.println("\nCredit card can operate");
-        } else {
-            System.out.println("\nCredit card can't operate");
-        }
-
-        // Identificar si una tarjeta es distinta a otra
-        if(processor.areCCEqual(ccNumber1, ccNumber2)) {
-            System.out.println("\nCredit cards are the same");
-        } else {
-            System.out.println("\nCredit card are not the same");
-        }
-
-        // Obtener por medio de un metodo la tasa de una operacion informando marca e importe"
-        System.out.println("\nCost added from rate: " + processor.getCostAddedFromRate(op));
 
         // Recibe la tasa de una operacion en un JSON en el body de la response
         getCostAddedFromRateAPI();

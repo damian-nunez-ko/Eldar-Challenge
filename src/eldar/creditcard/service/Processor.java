@@ -1,5 +1,6 @@
 package eldar.creditcard.service;
 
+import eldar.creditcard.exceptions.BadArgumentsException;
 import eldar.creditcard.exceptions.CreditCardAlreadyExistsException;
 import eldar.creditcard.exceptions.CreditCardCantOperateException;
 import eldar.creditcard.exceptions.OperationMaxAmountReachedException;
@@ -25,28 +26,29 @@ public class Processor {
         currentOpId = 0;
     }
 
-    public static Processor getInstance()
-    {
+    public static Processor getInstance() {
         if(processor == null)
             processor = new Processor();
-
         return processor;
     }
 
-    public void addCard(CreditCard card) throws CreditCardAlreadyExistsException {
-        if(cards.containsKey(card.getNumber())) {
+    public void addCard(CreditCard card) throws CreditCardAlreadyExistsException, BadArgumentsException {
+        if(card == null) {
+            throw new BadArgumentsException("Invalid Argument");
+        }
+        if(cards.containsKey(card.getId())) {
             throw new CreditCardAlreadyExistsException("Credit card already exists");
         }
-
-        cards.put(card.getNumber(), card);
+        cards.put(card.getId(), card);
     }
 
     public CreditCard getCard(int id) {
         return cards.get(id);
     }
 
-    public void doOperation(Operation op) throws CreditCardCantOperateException, OperationMaxAmountReachedException {
-        if(!canCCOperate(op.getCard().getNumber())) {
+    public void doOperation(Operation op) throws CreditCardCantOperateException, OperationMaxAmountReachedException, BadArgumentsException {
+        checkOperationArguments(op);
+        if(!canCCOperate(op.getCard().getId())) {
             throw new CreditCardCantOperateException("Credit card has expired");
         }
         if(!isOperationValid(op)) {
@@ -61,21 +63,43 @@ public class Processor {
         return operations.get(id);
     }
 
-    public double getCostAddedFromRate(Operation op) {
+    public double getCostAddedFromRate(Operation op) throws BadArgumentsException {
+        checkOperationArguments(op);
         return op.getAmount() * op.getCard().getIssuer().getRate(op);
     }
 
-    public boolean isOperationValid(Operation op) {
+    public boolean isOperationValid(Operation op) throws BadArgumentsException {
+        checkOperationArguments(op);
         return op.getAmount() * (1 + getCostAddedFromRate(op)) <= MAX_OPERATION_AMOUNT;
     }
 
-    public boolean canCCOperate(int id) {
+    public boolean canCCOperate(int id) throws BadArgumentsException {
         CreditCard cc = cards.get(id);
+        if(cc == null || cc.getExpireDate() == null) {
+            throw new BadArgumentsException("Invalid Argument");
+        }
         return cc.getExpireDate().isAfter(LocalDate.now());
     }
 
-    public boolean areCCEqual(int id1, int id2) {
-        return cards.get(id1).equals(cards.get(id2));
+    public boolean areCCEqual(int id1, int id2) throws BadArgumentsException {
+        CreditCard cc1 = cards.get(id1);
+        CreditCard cc2 = cards.get(id2);
+        if(cc1 == null || cc2 == null) {
+            throw new BadArgumentsException("Invalid Argument");
+        }
+        return cc1.equals(cc2);
+    }
+
+    public void checkOperationArguments(Operation op) throws BadArgumentsException {
+        if(     op == null ||
+                op.getCard() == null ||
+                op.getPurchaseDate() == null ||
+                op.getCard().getIssuer() == null ||
+                op.getCard().getExpireDate() == null ||
+                op.getCard().getHolder() == null ||
+                op.getAmount() <= 0) {
+            throw new BadArgumentsException("Invalid Argument");
+        }
     }
 
 }
